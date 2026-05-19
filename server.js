@@ -8,11 +8,19 @@ const bookRoutes = require("./routes/bookRoutes");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// view engine
+app.set("view engine", "ejs");
+
 // connect to database
 connectDB();
 
 // middleware
 app.use(express.json());
+
+// landing page route
+app.get("/", (req, res) => {
+  res.render("index");
+});
 
 // routes
 app.use("/api/books", bookRoutes);
