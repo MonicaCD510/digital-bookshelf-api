@@ -14,10 +14,41 @@ router.post("/", async (req, res) => {
   }
 });
 
-// get all products
+// get all products with filtering, sorting, and pagination
 router.get("/", async (req, res) => {
   try {
-    const products = await Product.find();
+    const { category, minPrice, maxPrice, sortBy, page = 1, limit = 10 } = req.query;
+
+    const query = {};
+
+    if (category) {
+      query.category = category;
+    }
+
+    if (minPrice || maxPrice) {
+      query.price = {};
+
+      if (minPrice) {
+        query.price.$gte = Number(minPrice);
+      }
+
+      if (maxPrice) {
+        query.price.$lte = Number(maxPrice);
+      }
+    }
+
+    let sortOption = {};
+
+    if (sortBy === "price_asc") {
+      sortOption.price = 1;
+    } else if (sortBy === "price_desc") {
+      sortOption.price = -1;
+    }
+
+    const products = await Product.find(query)
+      .sort(sortOption)
+      .skip((Number(page) - 1) * Number(limit))
+      .limit(Number(limit));
 
     res.json(products);
   } catch (error) {
