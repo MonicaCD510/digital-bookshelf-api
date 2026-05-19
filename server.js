@@ -2,6 +2,7 @@
 require("dotenv").config();
 const express = require("express");
 const connectDB = require("./db/connection");
+const bookRoutes = require("./routes/bookRoutes");
 
 // app configuration
 const app = express();
@@ -14,9 +15,7 @@ connectDB();
 app.use(express.json());
 
 // routes
-app.get("/", (req, res) => {
-  res.send("Digital Bookshelf API is running");
-});
+app.use("/api/books", bookRoutes);
 
 // server listener
 app.listen(PORT, () => {
