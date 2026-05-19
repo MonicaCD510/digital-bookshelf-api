@@ -2,6 +2,7 @@
 require("dotenv").config();
 const express = require("express");
 const connectDB = require("./config/connection");
+const productRoutes = require("./routes/productRoutes");
 
 // app configuration
 const app = express();
@@ -13,7 +14,9 @@ app.use(express.json());
 // database connection
 connectDB();
 
-// test route
+// routes
+app.use("/api/products", productRoutes);
+
 app.get("/", (req, res) => {
   res.send("Zenith Product API");
 });
